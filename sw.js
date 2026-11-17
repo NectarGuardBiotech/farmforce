@@ -1,4 +1,4 @@
-const CACHE = 'ngff-v2';
+const CACHE = 'ngff-v3';
 const SHELL = ['./', './index.html', './offline.html', './manifest.webmanifest',
   './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 self.addEventListener('install', e => {
@@ -13,7 +13,7 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
   e.respondWith(
-    fetch(req).then(r => {
+    fetch(req, {cache:'no-cache'}).then(r => {
       const copy = r.clone();
       caches.open(CACHE).then(c => c.put(req, copy));
       return r;

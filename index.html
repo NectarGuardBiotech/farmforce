@@ -76,8 +76,9 @@
     document.getElementById('retry').style.display = 'inline-block';
   }
   var cached = null; try { cached = localStorage.getItem(KEY); } catch(e) {}
-  if (cached) { render(cached); fetchShell().catch(function(){}); }   // opens instantly, refreshes for next time
-  else fetchShell().then(render).catch(fail);
+  function afterLoad(fn){ if (document.readyState === 'complete') setTimeout(fn, 0); else window.addEventListener('load', function(){ setTimeout(fn, 0); }); }
+  if (cached) { afterLoad(function(){ render(cached); fetchShell().catch(function(){}); }); }   // opens instantly, refreshes for next time
+  else fetchShell().then(function(h){ afterLoad(function(){ render(h); }); }).catch(fail);
   if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
 })();
 </script>
