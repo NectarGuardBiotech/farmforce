@@ -60,9 +60,19 @@
     '<meta name="apple-mobile-web-app-title" content="Farm Force"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">' +
     '<script>(' + shim.toString() + ')(' + JSON.stringify(API) + ');<\/script>';
 
+  function fixVp(){
+    try{
+      var ms=document.querySelectorAll('meta[name=viewport]');
+      for(var i=0;i<ms.length;i++) ms[i].parentNode.removeChild(ms[i]);
+      var m=document.createElement('meta'); m.name='viewport';
+      m.content='width=device-width, initial-scale=1, viewport-fit=cover';
+      (document.head||document.documentElement).appendChild(m);
+    }catch(e){}
+  }
   function render(html){
     html = html.replace(/<head[^>]*>/i, function(m){ return m + HEAD; });
     document.open(); document.write(html); document.close();
+    fixVp(); setTimeout(fixVp, 60); setTimeout(fixVp, 600);
   }
   function fetchShell(){
     return fetch(API + '?mode=shell', {redirect:'follow'}).then(function(r){ return r.text(); }).then(function(t){
